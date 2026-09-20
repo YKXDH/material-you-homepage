@@ -10,7 +10,7 @@ Material You（Material Design 3）风格 · 背景图轮播 · 动态取色 · 
 [![Build: none](https://img.shields.io/badge/build-none%20required-brightgreen.svg)](#-部署)
 [![Design: Material You](https://img.shields.io/badge/design-Material%20You-6750A4.svg)](#)
 
-**在线预览：<https://homepage-amr.pages.dev>**
+**在线预览：<https://home.tskxqxkxhexi.top>**
 
 <sub>English: A dependency-free, zero-build static personal homepage / link hub in Material You (Material Design 3) style, featuring a background slideshow and dynamic (Monet-like) color extraction from the current background image.</sub>
 
