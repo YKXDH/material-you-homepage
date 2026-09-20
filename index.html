@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>个人主页 · 导航</title>
+  <meta name="description" content="我的个人主页，聚合社交媒体与常用网站入口。" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#6750A4" id="metaThemeColor" />
+
+  <link rel="icon" href="favicon.png" type="image/png" sizes="128x128" />
+  <link rel="apple-touch-icon" href="favicon.png" />
+  <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- 尽早确定亮/暗，避免首屏主题闪烁。必须放在样式之前同步执行 -->
+  <script>
+    (function () {
+      try {
+        var mode = localStorage.getItem('homepage-theme') || 'auto';
+        var dark = mode === 'dark' ||
+          (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      } catch (e) { /* 隐私模式下忽略 */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <!-- ── 背景层（轮播，由 script.js 按 data.js 的 background 配置驱动）── -->
+  <!-- #bgFill 是「完整显示」模式下的留白填充层：同一张图的重度模糊放大版 -->
+  <div class="bg-fill" id="bgFill" aria-hidden="true"></div>
+  <div class="bg" id="bgA" aria-hidden="true"></div>
+  <div class="bg" id="bgB" aria-hidden="true"></div>
+  <div class="bg-veil" id="bgVeil" aria-hidden="true"></div>
+
+
+  <!-- ── 顶部应用栏 ───────────────────────────────── -->
+  <header class="app-bar" id="appBar">
+    <div class="app-bar__inner">
+      <div class="app-bar__brand">
+        <span class="app-bar__avatar" id="barAvatar" aria-hidden="true"></span>
+        <span class="app-bar__title" id="barTitle">个人主页</span>
+      </div>
+
+      <div class="app-bar__actions">
+        <button class="icon-btn" id="btnTheme" type="button"
+                aria-label="切换深浅色模式" title="切换深浅色模式">
+          <svg class="icon icon--sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2" fill="currentColor"/>
+            <g stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none">
+              <path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.4 5.4l1.7 1.7M16.9 16.9l1.7 1.7M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7"/>
+            </g>
+          </svg>
+          <svg class="icon icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M20.5 14.2A8.6 8.6 0 1 1 9.8 3.5a7 7 0 0 0 10.7 10.7Z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── 主体 ─────────────────────────────────────── -->
+  <main class="page" id="main">
+    <!-- 个人信息区（由 script.js 依据 data.js 渲染） -->
+    <section class="hero" id="hero" aria-label="个人信息"></section>
+
+    <!-- 链接分组区 -->
+    <div class="groups" id="groups"></div>
+
+    <noscript>
+      <div class="notice">
+        本站的导航按钮需要启用 JavaScript 才能渲染，请在浏览器设置中开启后刷新页面。
+      </div>
+    </noscript>
+  </main>
+
+  <!-- ── 页脚 ─────────────────────────────────────── -->
+  <footer class="footer" id="footer"></footer>
+
+  <!-- ── 悬浮操作按钮 ─────────────────────────────── -->
+  <div class="fab-wrap" id="fabWrap" hidden>
+    <button class="fab" id="btnShare" type="button">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M15 5.5 12.9 3.4a1.3 1.3 0 0 0-1.8 0L9 5.5H7.2A2.2 2.2 0 0 0 5 7.7v10.1A2.2 2.2 0 0 0 7.2 20h9.6a2.2 2.2 0 0 0 2.2-2.2V7.7a2.2 2.2 0 0 0-2.2-2.2H15Zm-4 6.6V15a1 1 0 1 0 2 0v-2.9h1.3a.6.6 0 0 0 .4-1L12.4 9a.6.6 0 0 0-.8 0L9.3 11a.6.6 0 0 0 .4 1H11Z"/>
+      </svg>
+      <span class="fab__label">分享主页</span>
+    </button>
+  </div>
+
+  <!-- ── 提示条 ───────────────────────────────────── -->
+  <div class="snackbar" id="snackbar" role="status" aria-live="polite"></div>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

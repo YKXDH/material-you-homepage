@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>页面不存在 · 个人主页</title>
+  <meta name="description" content="你要找的页面不存在。" />
+  <meta name="robots" content="noindex" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#6750A4" />
+
+  <!-- 用绝对路径：这个文件可能在任何层级被当作 404 页面返回 -->
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="128x128" />
+  <link rel="stylesheet" href="/style.css" />
+
+  <!-- 尽早确定亮/暗，避免首屏主题闪烁（与 index.html 同一套逻辑） -->
+  <script>
+    (function () {
+      try {
+        var mode = localStorage.getItem('homepage-theme') || 'auto';
+        var dark = mode === 'dark' ||
+          (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      } catch (e) { /* 隐私模式下忽略 */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="app-bar">
+    <div class="app-bar__inner">
+      <div class="app-bar__brand">
+        <span class="app-bar__title">个人主页</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 刻意不加载 script.js：404 页不需要背景轮播与卡片渲染，越轻越好 -->
+  <main id="main"
+        style="max-width: 36rem; margin: 0 auto;
+               padding: clamp(3rem, 12vh, 7rem) var(--page-pad) 4rem;
+               text-align: center;">
+    <p style="margin: 0; line-height: 1; font-weight: 650;
+              font-size: clamp(3.5rem, 18vw, 5.5rem);
+              color: var(--md-primary);">404</p>
+
+    <h1 style="margin: 1rem 0 .625rem;
+               font-size: clamp(1.25rem, 5vw, 1.6rem);">页面不存在</h1>
+
+    <p style="margin: 0 auto 2.25rem; max-width: 24rem; line-height: 1.75;
+              color: var(--md-on-surface-variant);">
+      你要找的地址可能被移动、改名过，或者从来没有存在过。
+    </p>
+
+    <a class="btn btn--filled" href="/">返回主页</a>
+  </main>
+
+  <footer class="footer" style="text-align: center;">
+    <div id="who">&nbsp;</div>
+  </footer>
+
+  <!-- 只借用 data.js 里的名字，不依赖 script.js -->
+  <script src="/data.js"></script>
+  <script>
+    (function () {
+      try {
+        var p = window.SITE_DATA && window.SITE_DATA.profile;
+        if (!p || !p.name) return;
+        document.title = '页面不存在 · ' + p.name;
+        var who = document.getElementById('who');
+        if (who) who.textContent = '© ' + new Date().getFullYear() + ' ' + p.name;
+      } catch (e) { /* 读不到就算了 */ }
+    })();
+  </script>
+</body>
+</html>

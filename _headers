@@ -1,0 +1,29 @@
+# Cloudflare Pages 响应头配置
+# 语法：先写 URL 路径匹配规则，紧接缩进的响应头
+#
+# 注意：当一个路径同时命中多条规则时，同名响应头是「用逗号拼接」而不是覆盖。
+#       所以下面的具体规则里，先用 `! 头名` 解除通配规则设过的 Cache-Control，
+#       否则会拼成 "public, max-age=0, must-revalidate, public, max-age=86400"，
+#       浏览器难以判断该听哪个，缓存一天的意图就失效了。
+
+# 页面与代码：每次重验证（命中 304 依然很快），保证推送后访客刷新即见新内容
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), interest-cohort=()
+
+# 图片这类几乎不变的大文件，缓存一天
+/avatar.webp
+  ! Cache-Control
+  Cache-Control: public, max-age=86400
+
+/favicon.png
+  ! Cache-Control
+  Cache-Control: public, max-age=86400
+
+# 背景图（9 张，合计约 1.4MB）：同样是几乎不变的大文件，缓存一天
+/backgrounds/*
+  ! Cache-Control
+  Cache-Control: public, max-age=86400
