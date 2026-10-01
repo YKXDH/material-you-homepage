@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>配置编辑器 · 个人主页</title>
+  <meta name="description" content="可视化编辑 data.js：个人信息、主题取色、背景轮播与链接分组，实时预览，一键导出。" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#6750A4" id="metaThemeColor" />
+  <meta name="robots" content="noindex" />
+
+  <link rel="icon" href="favicon.png" type="image/png" sizes="128x128" />
+  <link rel="apple-touch-icon" href="favicon.png" />
+  <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="editor.css" />
+
+  <!-- 尽早确定亮/暗，避免首屏闪烁（与 index.html 一致） -->
+  <script>
+    (function () {
+      try {
+        var mode = localStorage.getItem('homepage-theme') || 'auto';
+        var dark = mode === 'dark' ||
+          (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      } catch (e) { /* 隐私模式下忽略 */ }
+    })();
+  </script>
+</head>
+<body class="ed-body">
+
+  <a class="skip-link" href="#edForm">跳到编辑表单</a>
+
+  <!-- ── 顶部应用栏 ───────────────────────────────── -->
+  <header class="app-bar" id="appBar">
+    <div class="app-bar__inner">
+      <div class="app-bar__brand">
+        <span class="app-bar__avatar" id="barAvatar" aria-hidden="true"></span>
+        <span class="app-bar__title">配置编辑器</span>
+      </div>
+
+      <div class="app-bar__actions">
+        <span class="ed-dirty" id="edDirty" hidden>有未导出的改动</span>
+
+        <button class="icon-btn" id="btnImport" type="button" title="导入 data.js" aria-label="导入 data.js">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.6l2.3-2.3a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L11 12.6V4a1 1 0 0 1 1-1ZM5 18a1 1 0 0 1 1 1v1h12v-1a1 1 0 1 1 2 0v1.5A1.5 1.5 0 0 1 18.5 22h-13A1.5 1.5 0 0 1 4 20.5V19a1 1 0 0 1 1-1Z"/>
+          </svg>
+        </button>
+
+        <button class="icon-btn" id="btnDownloadTop" type="button" title="导出 data.js" aria-label="导出 data.js">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.6l2.3-2.3a1 1 0 1 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 0 1.4-1.4L11 12.6V4a1 1 0 0 1 1-1ZM5 18a1 1 0 0 1 1 1v1h12v-1a1 1 0 1 1 2 0v1.5A1.5 1.5 0 0 1 18.5 22h-13A1.5 1.5 0 0 1 4 20.5V19a1 1 0 0 1 1-1Z" transform="rotate(180 12 12)"/>
+          </svg>
+        </button>
+
+        <button class="icon-btn" id="btnTheme" type="button" title="切换深浅色模式" aria-label="切换深浅色模式">
+          <svg class="icon icon--sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2" fill="currentColor"/>
+            <g stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none">
+              <path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.4 5.4l1.7 1.7M16.9 16.9l1.7 1.7M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7"/>
+            </g>
+          </svg>
+          <svg class="icon icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M20.5 14.2A8.6 8.6 0 1 1 9.8 3.5a7 7 0 0 0 10.7 10.7Z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── 主体：左编辑 / 右预览 ─────────────────────── -->
+  <main class="ed-shell" id="edShell">
+
+    <!-- 编辑面板 -->
+    <section class="ed-pane ed-pane--form" aria-label="配置表单">
+      <nav class="ed-tabs" id="edTabs" role="tablist">
+        <button class="ed-tab" type="button" role="tab" data-tab="basic" aria-selected="true">基本信息</button>
+        <button class="ed-tab" type="button" role="tab" data-tab="theme" aria-selected="false">主题取色</button>
+        <button class="ed-tab" type="button" role="tab" data-tab="bg" aria-selected="false">背景轮播</button>
+        <button class="ed-tab" type="button" role="tab" data-tab="links" aria-selected="false">链接分组</button>
+        <button class="ed-tab" type="button" role="tab" data-tab="code" aria-selected="false">导出</button>
+      </nav>
+
+      <form class="ed-form" id="edForm" autocomplete="off" novalidate></form>
+
+      <div class="ed-footbar">
+        <button class="btn btn--outlined" type="button" id="btnReset">放弃改动</button>
+        <button class="btn btn--filled" type="button" id="btnDownload">导出 data.js</button>
+      </div>
+    </section>
+
+    <!-- 预览面板 -->
+    <section class="ed-pane ed-pane--preview" aria-label="实时预览">
+      <div class="ed-preview-bar">
+        <span class="ed-preview-bar__title">实时预览</span>
+
+        <div class="ed-seg" id="edDevice" role="group" aria-label="预览尺寸">
+          <button class="ed-seg__btn" type="button" data-device="phone">手机</button>
+          <button class="ed-seg__btn" type="button" data-device="tablet">平板</button>
+          <button class="ed-seg__btn is-on" type="button" data-device="desktop">桌面</button>
+        </div>
+
+        <label class="ed-inline-switch" title="编辑时自动刷新预览">
+          <input type="checkbox" id="chkAuto" checked />
+          <span>自动刷新</span>
+        </label>
+
+        <button class="btn btn--tonal ed-btn-sm" type="button" id="btnRefresh">刷新</button>
+        <button class="btn btn--outlined ed-btn-sm" type="button" id="btnOpenPreview">新窗口</button>
+      </div>
+
+      <div class="ed-frame-wrap" id="edFrameWrap" data-device="desktop">
+        <iframe id="edFrame" title="主页预览" src="about:blank"></iframe>
+        <div class="ed-frame-note" id="edFrameNote" hidden></div>
+      </div>
+
+      <p class="ed-tip">
+        预览由 <code>index.html</code> 实时渲染，会完整加载 <code>style.css</code> 与 <code>script.js</code>，
+        因此背景轮播、动态取色、毛玻璃等效果与正式页面完全一致。
+      </p>
+    </section>
+  </main>
+
+  <!-- 移动端：编辑 / 预览 切换 -->
+  <div class="ed-mobile-toggle" id="edMobileToggle">
+    <button class="ed-seg__btn is-on" type="button" data-view="form">编辑</button>
+    <button class="ed-seg__btn" type="button" data-view="preview">预览</button>
+  </div>
+
+  <!-- ── 提示条 ───────────────────────────────────── -->
+  <div class="snackbar" id="snackbar" role="status" aria-live="polite"></div>
+
+  <input type="file" id="fileImport" accept=".js,.txt,text/javascript,application/javascript" hidden />
+
+  <!-- 读取当前站点的配置作为编辑起点 -->
+  <script src="data.js"></script>
+  <script src="editor.js"></script>
+</body>
+</html>
