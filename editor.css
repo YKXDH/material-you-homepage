@@ -101,7 +101,11 @@
   border: 1px solid var(--md-outline-variant);
   border-radius: var(--md-shape-lg);
 }
-.ed-section[hidden] { display: none; }
+/* hidden 属性必须能压过下面各处的 display 声明，否则元素会一直显示：
+   浏览器默认样式里的 [hidden] { display: none } 优先级极低，
+   只要本文件给同类元素写了 display（inline-flex / block / grid），
+   那个 display 就会反过来赢。这里统一兜底。 */
+[hidden] { display: none !important; }
 
 .ed-section__title {
   margin: 0 0 .25rem;
